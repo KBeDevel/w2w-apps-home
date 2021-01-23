@@ -1,0 +1,29 @@
+stages:
+  - test
+  - build
+
+image: node:lastest
+
+cache:
+  paths:
+    - node_modules/
+
+before_script:
+  - npm i -g yarn
+  - yarn install
+
+lint:
+  stage: test
+  script:
+    - yarn run lint:dry
+
+# Pending configuration
+# unit:
+#   stage: test
+#   script:
+#     - yarn test
+
+build:
+  stage: build
+  script:
+    - yarn build

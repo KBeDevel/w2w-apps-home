@@ -1,0 +1,17 @@
+@use ../index
+
+@mixin links-in-dark
+  a
+    color: white
+    &:hover
+      color: orange
+      transition: color .2s ease-in-out
+
+.footer-top
+  color: white
+  +links-in-dark
+
+.footer-bottom
+  background-color: black
+  color: white
+  +links-in-dark

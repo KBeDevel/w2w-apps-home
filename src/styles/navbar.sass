@@ -1,0 +1,17 @@
+@use ~bootstrap/scss/bootstrap
+
+.navbar
+  z-index: 12
+  .nav-link
+    text-decoration: none
+    &:hover
+      color: orange
+      transition: color .2s ease-in-out
+  .dropdown-item
+    &.active
+      background-color: orange
+      color: black
+    &:not(.active):hover
+      background-color: lighten(orange, 20%)
+    &:focus
+      background-color: darken(orange, 3%)
