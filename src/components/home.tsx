@@ -12,7 +12,6 @@ import B2BLogo from '../assets/images/w2w-b2b-logo.png';
 import FIORBannerImage from '../assets/images/fior-banner.jpg';
 import ECLFUllLogo from '../assets/svgs/ecl-full-logo.svg';
 import ECLFUllWhiteLogo from '../assets/svgs/ecl-full-logo-white.svg';
-import { LinkContainer } from "react-router-bootstrap";
 import { Link } from 'react-router-dom';
 import { OurServices } from './services';
 import Swal from 'sweetalert2';
@@ -46,7 +45,7 @@ class HomeBannerContent extends Component {
 
 class HomeBannerOverlay extends Component {
 
-  private handleDefaultAppLink(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void {
+  private handleDefaultAppLink(event: React.MouseEvent<Record<never, string>, MouseEvent>): void {
     if (event.isTrusted) {
       const alert = Swal.mixin({
         customClass: {
@@ -59,6 +58,12 @@ class HomeBannerOverlay extends Component {
         text: 'Please, try again later',
         icon: 'warning'
       });
+    }
+  }
+
+  private handleRedirect(event: React.MouseEvent<Record<never, string>, MouseEvent>, link: string): void {
+    if (event.isTrusted) {
+      window.location.href = link;
     }
   }
 
@@ -83,27 +88,23 @@ class HomeBannerOverlay extends Component {
               <div className="p-0 p-lg-4 m-4 m-lg-5 text-center">
                 <h2><b>Our Apps</b></h2>
                 <div className="banner-box-apps">
-                  <LinkContainer to="/fasttrack">
-                    <div className="bg-white my-3 app-logo force-cursor">
-                      <img
-                        className="m-2"
-                        src={ FasttrackLogo }
-                        height="65"
-                        alt="FAST TRACK"
-                      ></img>
-                    </div>
-                  </LinkContainer>
-                  <LinkContainer to="/home" onClick={ (event) => { this.handleDefaultAppLink(event); } }>
-                    <div className="bg-white my-3 app-logo force-cursor">
-                      <img
-                        className="m-2"
-                        src={ B2BLogo }
-                        height="65"
-                        alt="WE TO WORLD"
-                      ></img>
-                      <span className="font-weight-bold">B2B Platform</span>
-                    </div>
-                  </LinkContainer>
+                  <div className="bg-white my-3 app-logo force-cursor" onClick={ (event) => { this.handleRedirect(event, '/fasttrack'); } }>
+                    <img
+                      className="m-2"
+                      src={ FasttrackLogo }
+                      height="65"
+                      alt="FAST TRACK"
+                    ></img>
+                  </div>
+                  <div className="bg-white my-3 app-logo force-cursor" onClick={ (event) => { this.handleDefaultAppLink(event); } }>
+                    <img
+                      className="m-2"
+                      src={ B2BLogo }
+                      height="65"
+                      alt="WE TO WORLD"
+                    ></img>
+                    <span className="font-weight-bold">B2B Platform</span>
+                  </div>
                 </div>
                 <h3><b>& more...</b></h3>
               </div>
