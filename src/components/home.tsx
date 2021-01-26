@@ -88,7 +88,7 @@ class HomeBannerOverlay extends Component {
               <div className="p-0 p-lg-4 m-4 m-lg-5 text-center">
                 <h2><b>Our Apps</b></h2>
                 <div className="banner-box-apps">
-                  <div className="bg-white my-3 app-logo force-cursor" onClick={ (event) => { this.handleRedirect(event, '/fasttrack'); } }>
+                  <div className="bg-white my-3 app-logo force-cursor" onClick={ (event) => { this.handleDefaultAppLink(event); /* this.handleRedirect(event, '/fasttrack'); */ } }>
                     <img
                       className="m-2"
                       src={ FasttrackLogo }
