@@ -5,8 +5,6 @@ import RouterComponent from "../common/models/component.model";
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Alert from 'react-bootstrap/Alert';
-import '../styles/home.sass';
 import FasttrackLogo from '../assets/svgs/fasttrack-logo.svg';
 import B2BLogo from '../assets/images/w2w-b2b-logo.png';
 import FIORBannerImage from '../assets/images/fior-banner.jpg';
@@ -15,6 +13,7 @@ import ECLFUllWhiteLogo from '../assets/svgs/ecl-full-logo-white.svg';
 import { Link } from 'react-router-dom';
 import { OurServices } from './services';
 import Swal from 'sweetalert2';
+import '../styles/home.sass';
 
 class HomeBannerContent extends Component {
   public render(): JSX.Element {
@@ -86,7 +85,7 @@ class HomeBannerOverlay extends Component {
           <Col className="text-white banner-box-wrapper" xs="12" lg>
             <div className="banner-box">
               <div className="p-0 p-lg-4 m-4 m-lg-5 text-center">
-                <h2><b>Our Apps</b></h2>
+                <h2 className="font-weight-bold"><b>Direct links</b></h2>
                 <div className="banner-box-apps">
                   <div className="bg-white my-3 app-logo force-cursor" onClick={ (event) => { this.handleDefaultAppLink(event); /* this.handleRedirect(event, '/fasttrack'); */ } }>
                     <img
@@ -106,7 +105,8 @@ class HomeBannerOverlay extends Component {
                     <span className="font-weight-bold">B2B Platform</span>
                   </div>
                 </div>
-                <h3><b>& more...</b></h3>
+                <h3><b>and more coming soon</b></h3>
+                <h5 className="font-weight-light font-italic">See bellow for details</h5>
               </div>
             </div>
           </Col>
@@ -131,45 +131,50 @@ class HomeBanner extends Component {
   }
 }
 
-interface DismissibleAlertComponentState {
-  isActive: boolean
-}
-
-class DevelopmentAlert extends Component<Record<string, never>, DismissibleAlertComponentState>{
-  constructor(
-    props: never
-  ) {
-    super(props);
-    this.state = {
-      isActive: true
-    }
-  }
-
-  private hideAlert(): void {
-    this.setState({
-      isActive: false
-    });
-  }
-
-  public render(): JSX.Element {
-    return (
-      <Alert variant="warning" show={ this.state.isActive } transition={ true } onClose={ () => this.hideAlert() } dismissible={ true }>
-        This service is under development. For any question, call us or send us a message (<Link to="/contact">check contact information</Link>)
-      </Alert>
-    );
-  }
-}
-
 class HomeBody extends Component {
   public render(): JSX.Element {
     return (
       <>
         <Container className="h-100 my-4 my-lg-5" fluid>
-          <Row className="h-100 body-section-0">
-            <Container>
+          <Row className="h-100">
+            <Container className="h-100 body-section-0 my-3">
               <Row>
-                <Col className="my-5 mt-0">
-                  <DevelopmentAlert/>
+                <Col>
+                  <hr/>
+                </Col>
+              </Row>
+              <Row className="h-100 align-items-center flex-lg-wrap d-lg-flex my-5">
+                <Col xs="12" lg>
+                  <h3 className="font-weight-bold"><a className="header-link" href="/fast-track">We To World - Fast Track</a></h3>
+                  <h5 className="font-weight-light">
+                    Integral logistics, customs and consulting solution that supports export and 
+                    international e-commerce fulfillment, facilitating Latin American exporters 
+                    the delivery to the final customer of their products sold to the North 
+                    American market through online sales channels, either directly or through 
+                    marketplaces such as Amazon.
+                  </h5>
+                </Col>
+                <Col className="text-center" xs="12" lg="5">
+                  <img
+                    className="img-fluid"
+                    src={ FasttrackLogo }
+                    alt="Fast Track - Market Accelerator"
+                  ></img>
+                </Col>
+              </Row>
+              <Row className="h-100 align-items-center flex-lg-wrap d-lg-flex my-5">
+                <Col xs="12" lg>
+                  <h3 className="font-weight-bold">We To World - B2B Platform</h3>
+                  <h5 className="font-weight-light">
+                    &nbsp;
+                  </h5>
+                </Col>
+                <Col className="text-center" xs="12" lg="5">
+                  <img
+                    height="100"
+                    src={ B2BLogo }
+                    alt="Fast Track - Market Accelerator"
+                  ></img>
                 </Col>
               </Row>
             </Container>

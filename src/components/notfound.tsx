@@ -5,9 +5,16 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 import Error404Icon from '../assets/svgs/error-404.svg';
+import RouterComponent from '../common/models/component.model';
+import Functions from '../common/helpers/functions.helper';
 
-class NotFound extends Component {
+class NotFound extends Component implements RouterComponent {
+  public preload(): void {
+    Functions.updateTitle('Error 404');
+  }
+
   public render(): JSX.Element {
+    this.preload();
     return RouterOutline.set(
       <Container>
         <Row>
