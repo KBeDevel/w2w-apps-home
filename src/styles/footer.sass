@@ -1,17 +1,15 @@
-@use ../index
+@import ./_colors
+@import ./_mixins
 
-@mixin links-in-dark
-  a
-    color: white
-    &:hover
-      color: orange
-      transition: color .2s ease-in-out
-
-.footer-top
-  color: white
-  +links-in-dark
-
-.footer-bottom
-  background-color: black
-  color: white
-  +links-in-dark
+footer
+  .footer-top
+    color: $light
+    +links-in-dark
+  .footer-middle
+    color: $light
+    +links-in-dark
+    font-size: small
+  .footer-bottom
+    background-color: $black
+    color: $light
+    +links-in-dark

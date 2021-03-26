@@ -2,28 +2,27 @@ stages:
   - test
   - build
 
-image: node:latest
+image: node:latest # Already have yarn installed
 
 cache:
   paths:
     - node_modules/
 
 before_script:
-  # - npm i -g yarn
-  - yarn install
+  - yarn
 
 lint:
   stage: test
   script:
-    - yarn run lint:dry
+    - yarn lint:dry
 
-# Pending configuration
-# unit:
-#   stage: test
-#   script:
-#     - yarn test
+unit_tests:
+  stage: test
+  script:
+    - echo "Ignore img.src assignation errors"
+    - yarn test:ci
 
 build:
   stage: build
   script:
-    - yarn build
+    - yarn build:prod

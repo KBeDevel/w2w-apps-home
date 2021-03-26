@@ -1,0 +1,64 @@
+// Load bootstrap styles (do not import again)
+@import ~bootstrap/scss/bootstrap
+// Load custom fonts
+@import url(https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap)
+
+@import ./_mixins
+@import ./_colors
+
+// GROUP: Global styles
+html
+  scrollbar-width: auto
+  scrollbar-color: $light-gray-accent $light-gray
+  &::-webkit-scrollbar
+    width: 8px
+  &::-webkit-scrollbar-track
+    background: $light-gray
+  &::-webkit-scrollbar-thumb
+    background-color: $light-gray
+    border: 1px solid $light-gray-accent
+    border-radius: 1px
+
+body
+  margin: 0
+  font-family: 'Helvetica Neue', 'Roboto', 'Open Sans', 'Liberation Sans', sans-serif
+
+code
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace
+
+a
+  color: $main-color
+  &:hover
+    color: darken($main-color, 15%)
+    transition: color .2s ease-in-out
+    text-decoration: underline
+
+label
+  &.optional
+    &::after
+      content: ' (Optional)'
+      color: $dark-gray
+  &.conditional
+    &::after
+      content: '' !important
+  &:not(.optional):not(.custom-control-label):not(.custom-file-label)
+    &::after
+      content: ' *'
+      color: red
+
+.force-cursor
+  &:hover
+    cursor: pointer !important
+
+::selection, ::-moz-selection
+  +selection-default
+
+.tos, .pp
+  h1, h2, h3, h4, h5
+    font-weight: bold
+// END: Global styles
+
+// GROUP: Third party elements
+.grecaptcha-badge
+  opacity: 0 !important // Hide Google Recaptcha V3 Badge
+// END: Third party elements

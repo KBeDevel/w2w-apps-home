@@ -1,0 +1,47 @@
+@import ./_colors
+
+@mixin selection-default
+  color: $black
+  background: $main-color !important
+
+@mixin full-height()
+  height: 100%
+
+@mixin overlay($backgroundColor, $height: 100%)
+  position: relative
+  &::before
+    content: ''
+    display: inherit
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    height: $height !important
+    background: $backgroundColor !important
+    z-index: 1
+    overflow: hidden
+
+@mixin default-link
+  color: $black !important
+  transition: color .2s ease-in-out
+  &:hover
+    text-decoration: none
+    color: $main-color !important
+  
+@mixin links-in-dark
+  a
+    color: $light
+    &:hover
+      color: $main-color
+      transition: color .2s ease-in-out
+
+@mixin custom-control
+  outline: none !important
+  -webkit-box-shadow: none !important
+  box-shadow: none !important
+  border-color: $main-color !important
+  transition: background-color .2s ease-in-out
+
+@mixin blurred-backdrop($intensity: 8px)
+  -webkit-backdrop-filter: blur($intensity)
+  backdrop-filter: blur($intensity)

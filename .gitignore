@@ -6,6 +6,15 @@ node_modules
 /.pnp
 .pnp.js
 
+# yarn-dependencies
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
 # testing
 /coverage
 
@@ -15,6 +24,7 @@ node_modules
 # misc
 .DS_Store
 .cert
+.env
 .env.local
 .env.development.local
 .env.test.local

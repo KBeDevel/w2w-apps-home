@@ -1,0 +1,17 @@
+@import './_colors'
+
+.col-card
+  padding: 1rem
+  background-color: $light-gray
+  color: $dark
+
+.dash-app-link
+  padding: 1rem
+  background-color: inherit
+  transition: background-color .2s
+  &:hover
+    cursor: pointer
+    background-color: darken($light-gray, 15%)
+    transition: all .2s
+  img
+    max-height: 4rem

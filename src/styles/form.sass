@@ -1,11 +1,15 @@
-input, textarea
+@import ./_colors
+@import ./_mixins
+@import ./_variables
+
+input, textarea, select:not(.react-datepicker__year-select), .default-select
   &:focus
-    border-color: orange !important
-    box-shadow: none !important
-    outline: 0 none
-  &.form-control
+    +custom-control
+  &.form-control, &.custom-select
     border-width: 2px !important
     border-radius: 0rem !important
+  &:disabled
+    cursor: not-allowed
 
 textarea
   min-height: 3em !important
@@ -15,3 +19,36 @@ button
   &:disabled,
   &.disabled
     cursor: not-allowed !important
+
+.input-group
+  margin-bottom: 1rem
+  .input-group-text
+    border-radius: 0rem
+    border-width: 2px
+    height: calc(1.5em + 0.75rem + 2px)
+    @media screen and (min-width: $breakpoint-lg)
+      border-right: 0rem
+
+.optional
+  &::after
+    content: ' (Optional)'
+    color: $dark-gray
+
+.custom-control
+  &.custom-switch
+    .custom-control-label::before
+      margin-right: -1.2rem !important
+    .custom-control-input ~ .custom-control-label::before
+      +custom-control
+      border-color: $light-gray-accent !important
+    .custom-control-input ~ .custom-control-label::before,
+    .custom-control-input ~ .custom-control-label::after
+      margin-top: .05rem !important
+    .custom-control-input:checked ~ .custom-control-label::before
+      +custom-control
+      background-color: $main-color !important
+      margin-top: .05rem !important
+    .custom-control-input:checked ~ .custom-control-label::after
+      +custom-control
+      border-color: $light-gray-accent
+      margin-top: .05rem !important

@@ -1,0 +1,28 @@
+@import ./_colors
+@import ./_mixins
+@import ./_variables
+
+.sign-in-background
+  position: relative
+  z-index: 0
+  background: url(../assets/img/sign-in.jpg)
+  background-repeat: no-repeat
+  background-size: cover
+  background-position: center
+  padding-top: 6rem
+  padding-bottom: 6rem
+  +overlay(rgba($dark, .5), 100%)
+  &::before
+    +blurred-backdrop(6px)
+  @media screen and (max-width: $breakpoint-lg)
+    background: $light-gray
+    padding-top: 0rem
+    padding-bottom: 0rem
+  .sign-in-form
+    position: relative
+    z-index: 2
+    border: solid 1px $light-gray-accent
+    background-color: $light-gray
+    padding: 3rem
+    @media screen and (max-width: $breakpoint-lg)
+      border: none
