@@ -12,7 +12,8 @@ import Forbidden from '../components/errors/403'
 import NotFound from '../components/errors/404'
 import Profile from '../components/private/profile'
 import Dashboard from '../components/private/dashboard'
-import SessionPrinter from '../components/public/session'
+import Session from '../components/public/session'
+import Logout from '../components/public/logout'
 
 const RoutesMap: { [routeId: string]: RouteConfig } = {
   home: {
@@ -27,7 +28,12 @@ const RoutesMap: { [routeId: string]: RouteConfig } = {
   session: {
     path: '/session',
     public: true,
-    component: SessionPrinter
+    component: Session
+  },
+  logout: {
+    path: '/logout',
+    public: true,
+    component: Logout
   },
   services: {
     path: '/services',

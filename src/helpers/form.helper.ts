@@ -18,7 +18,7 @@ export interface SubmitButtonProps {
 
 export function getControlValidationState(fieldData: FormField | undefined): boolean {
   return fieldData?.required ? (
-    fieldData.value !== undefined && (typeof fieldData.value === 'boolean' ? fieldData.value : fieldData.value !== '')
+    !!fieldData.value
   ) : true
 }
 

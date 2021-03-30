@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { DefaultRequestHeaders, DefaultResponse, SessionData } from '../types'
+import { CommonFunctions } from './common-functions.helper'
 
 //#region Axios Interceptors
 axios.interceptors.request.use(
@@ -92,7 +93,7 @@ export default class ProvidersHelper {
   }
 
   public static getPrivateToken(): string | null {
-    const rawSessionData = localStorage.getItem(ProvidersHelper.LocalStorage.sessionData)
+    const rawSessionData = CommonFunctions.Base64.decode(localStorage.getItem(ProvidersHelper.LocalStorage.sessionData) ?? '')
     if (rawSessionData) {
       const sessionData = JSON.parse(rawSessionData) as SessionData
       return sessionData.token

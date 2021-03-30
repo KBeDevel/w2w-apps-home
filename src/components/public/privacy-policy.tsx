@@ -6,6 +6,7 @@ import RouterOutline, { RouterComponent } from '../../helpers/router.helper'
 export default class PrivacyPolicy extends Component implements RouterComponent {
   public preload(): void {
     CommonFunctions.updatePathTitle('Privacy Policy')
+    document.body.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
   public render(): JSX.Element {

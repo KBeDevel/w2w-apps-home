@@ -7,7 +7,9 @@ import SubmitButton from '../common/submit-button'
 import { CommonFunctions } from '../../helpers/common-functions.helper'
 import { GoogleReCaptcha } from 'react-google-recaptcha-v3'
 import { ContactFormFields, ContactForm as ContactUsBody, ContactFormMessage, EmptyProps, FormState, SecuredFormState } from '../../types'
-import { getControlValidationState } from '../../helpers/form.helper'
+import { getControlValidationState, handleW2WAPIResponse } from '../../helpers/form.helper'
+import ProfileProvider from '../../providers/profile.provider'
+import Swal from 'sweetalert2'
 import ContactProvider from '../../providers/contact.provider'
 import '../../styles/form.sass'
 
@@ -30,6 +32,24 @@ export default class ContactForm extends Component<EmptyProps, ContactFormMessag
     this.state = this.initState()
   }
 
+  public componentDidMount(): void {
+    ProfileProvider.getUserProfile().then((response) => {
+      if (response?.value?.representative) {
+        this.setState({
+          ...this.state,
+          contactName: {
+            ...this.state.contactName,
+            value: `${response.value.representative.firstName} ${response.value.representative.lastName}`
+          },
+          contactEmail: {
+            ...this.state.contactEmail,
+            value: response.value.representative.contactData.email
+          }
+        })
+      }
+    })
+  }
+
   private initState(): ContactFormMessage & ContactFormFields & FormState & SecuredFormState {
     return {
       isFormValid: false,
@@ -38,11 +58,11 @@ export default class ContactForm extends Component<EmptyProps, ContactFormMessag
       fieldHeight: this._defaultTextAreaHeight,
       contactName: {
         required: true,
-        value: undefined
+        value: ''
       },
       contactEmail: {
         required: true,
-        value: undefined
+        value: ''
       },
       contactMessage: {
         required: true,
@@ -61,55 +81,31 @@ export default class ContactForm extends Component<EmptyProps, ContactFormMessag
   }
 
   private updateStateFromInput(inputElement: HTMLInputElement): void {
-    const isTextBox = (input = inputElement) => {
-      return input.type === 'text' || input.type === 'email'
-    }
-    this.setState(
-      Object.assign(
-        this.state,
-        {
-          [inputElement.id]: Object.assign(
-            (this.state as ContactFormFields)[inputElement.id as keyof ContactFormFields],
-            {
-              value: isTextBox()
-                ? inputElement.value
-                : inputElement.checked
-            }
-          )
-        }
-      )
-    )
+    this.setState({
+      ...this.state,
+      [inputElement.id]: {
+        ...(this.state as ContactFormFields)[inputElement.id as keyof ContactFormFields],
+        value: CommonFunctions.isTextBox(inputElement)
+          ? inputElement.value
+          : inputElement.checked
+      }
+    }, () => {
+      this.checkFieldsValidity()
+    })
   }
 
   private checkFieldsValidity(): void {
     let valid = true
     for (const fieldId in this.state) {
-      if (valid) {
-        const fieldData = (this.state as ContactFormFields)[fieldId as keyof ContactFormFields]
-        valid = getControlValidationState(fieldData)
-      } else {
-        break
-      }
+      if (!valid) break
+      const fieldData = (this.state as ContactFormFields)[fieldId as keyof ContactFormFields]
+      console.log(fieldData)
+      valid = getControlValidationState(fieldData)
     }
     this.setState({
       ...this.state,
       isFormValid: valid
     })
-  }
-
-  private handleMessageInputHeight(event: ChangeEvent): void {
-    this.setState((prevState) => Object.assign(
-      prevState,
-      {
-        fieldHeight: !(event.target as HTMLTextAreaElement).value
-          ? this._defaultTextAreaHeight
-          : (
-            event.target.scrollHeight < this._defaultTextAreaHeight
-              ? this.state.fieldHeight
-              : event.target.scrollHeight
-          )
-      }
-    ))
   }
 
   private updateRecaptchaToken(token: string): void {
@@ -124,20 +120,30 @@ export default class ContactForm extends Component<EmptyProps, ContactFormMessag
     })
   }
 
+  private handleFormChange(event: ChangeEvent): void {
+    if (event.target instanceof HTMLInputElement) {
+      this.updateStateFromInput(event.target)
+    }
+  }
+
   private handleMessageTyping(event: ChangeEvent): void {
     if (event.isTrusted) {
       const input = event.target as HTMLTextAreaElement
       this._messageCharacterCounter = input.value.length
-      input.value = input.value
-        ? input.value[0].toLocaleUpperCase() + input.value.substr(1)
-        : ''
-    }
-  }
-
-  private handleFormChange(event: ChangeEvent): void {
-    if (event.target instanceof HTMLInputElement) {
-      this.updateStateFromInput(event.target)
-      this.checkFieldsValidity()
+      this.setState({
+        ...this.state,
+        contactMessage: {
+          ...this.state.contactMessage,
+          value: CommonFunctions.capitalize(input.value, 'simple')
+        },
+        fieldHeight: !(event.target as HTMLTextAreaElement).value
+          ? this._defaultTextAreaHeight
+          : (
+            event.target.scrollHeight < this._defaultTextAreaHeight
+              ? this.state.fieldHeight
+              : event.target.scrollHeight
+          )
+      })
     }
   }
 
@@ -150,14 +156,20 @@ export default class ContactForm extends Component<EmptyProps, ContactFormMessag
     if (!this.state.isRecaptchaTokenValidated) return
 
     const contactForm: ContactUsBody = {
-      completeName: this.state.contactName.value as string,
-      email: this.state.contactEmail.value as string,
+      senderName: this.state.contactName.value as string,
+      senderEmail: this.state.contactEmail.value as string,
       message: this.state.contactMessage.value as string
     }
 
     ContactProvider.sendMessage(contactForm).then((response) => {
-      if (response) {
-        console.log(response)
+      if (!response) return
+      if (handleW2WAPIResponse(response)) {
+        if (response.value.sent) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Message sent'
+          })
+        }
       }
     }).finally(() => {
       this.setState({
@@ -173,11 +185,12 @@ export default class ContactForm extends Component<EmptyProps, ContactFormMessag
         <Grid.Row>
           <Grid.Col>
             <Form name="contactForm" onSubmit={ (event) => { this.handleFormSubmit(event) } }>
-              <GoogleReCaptcha onVerify={ (token) => { this.updateRecaptchaToken(token) } } />
+              <GoogleReCaptcha action={ 'contact' } runOnlyOnMount={ true } onVerify={ (token) => { this.updateRecaptchaToken(token) } } />
               <Form.Group controlId="contactName">
                 <Form.Label>Your name</Form.Label>
                 <Form.Control
                   type="text"
+                  value={ this.state.contactName.value }
                   onChange={ (event) => { this.capitalizeName(event); this.handleFormChange(event) } }
                   placeholder={ this._placeholders.name }
                   required={ this.state.contactName.required } />
@@ -186,6 +199,7 @@ export default class ContactForm extends Component<EmptyProps, ContactFormMessag
                 <Form.Label>Your email</Form.Label>
                 <Form.Control
                   type="email"
+                  value={ this.state.contactEmail.value }
                   onChange={ (event) => { this.handleFormChange(event) } }
                   placeholder={ this._placeholders.email }
                   required={ this.state.contactEmail.required } />
@@ -198,10 +212,11 @@ export default class ContactForm extends Component<EmptyProps, ContactFormMessag
                 <Form.Control
                   as="textarea"
                   rows={ 3 }
+                  value={ this.state.contactMessage.value }
                   style={{ height: Math.floor(this.state.fieldHeight) }}
                   minLength={ this._messageMinLength }
                   maxLength={ this._messageMaxLength }
-                  onChange={ (event) => { this.handleMessageTyping(event); this.handleMessageInputHeight(event); this.handleFormChange(event) } }
+                  onChange={ (event) => { this.handleFormChange(event), this.handleMessageTyping(event) } }
                   placeholder={ this._placeholders.message }
                   required={ this.state.contactMessage.required } />
                 <Form.Text>
@@ -210,7 +225,6 @@ export default class ContactForm extends Component<EmptyProps, ContactFormMessag
               </Form.Group>
               <SubmitButton
                 variant="dark"
-                disableIf={ !this.state.isFormValid }
                 isSubmitting={ this.state.isSubmitting }
                 buttonText={ 'Send' } />
               <div className="py-2" />

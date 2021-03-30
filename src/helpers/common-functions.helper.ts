@@ -77,8 +77,10 @@ export class CommonFunctions {
       }
       return words.join(' ')
     } else {
-      const lowerCaseText = stringToCapitalize.trim().toLowerCase() // Remove empty characters
-      return lowerCaseText[0].toUpperCase() + lowerCaseText.substr(1)
+      const lowerCaseText = stringToCapitalize.trimStart().toLowerCase() // Remove empty characters
+      return lowerCaseText.length > 0
+        ? lowerCaseText[0].toUpperCase() + lowerCaseText.substr(1)
+        : ''
     }
   }
 

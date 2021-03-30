@@ -6,6 +6,7 @@ import RouterOutline, { RouterComponent } from '../../helpers/router.helper'
 export default class TermsOfService extends Component implements RouterComponent {
   public preload(): void {
     CommonFunctions.updatePathTitle('Service Terms and Conditions')
+    document.body.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
   public render(): JSX.Element {
@@ -158,7 +159,7 @@ export default class TermsOfService extends Component implements RouterComponent
             <h2>Contact Us</h2>
             <p>If you have any questions about these Terms and Conditions, You can contact us:</p>
             <ul>
-              <li>By email: esellers@wetoworld.com</li>
+              <li>By email: <a href="mailto:esellers@wetoworld.com">esellers@wetoworld.com</a></li>
             </ul>
           </Grid.Col>
         </Grid.Row>

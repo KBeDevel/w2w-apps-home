@@ -1,15 +1,17 @@
 import { Component } from 'react'
 import { CommonFunctions } from '../../helpers/common-functions.helper'
+import { Link } from 'react-router-dom'
 import ContactData from './contact-data'
 import Grid from '../../helpers/grid.helper'
 import Image from 'react-bootstrap/Image'
 import RoutesMap from '../../helpers/routes-map.helper'
-import { Link } from 'react-router-dom'
-
+import Button from 'react-bootstrap/Button'
 import W2WLogo from '../../assets/img/w2w-logo.png'
 import WorldMapImage from '../../assets/svg/world-map.svg'
 import ECLLogo from '../../assets/svg/ecl-logo.svg'
 import WTCLogo from '../../assets/img/wtcfl-logo-white.png'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChevronUp } from '@fortawesome/free-solid-svg-icons'
 import '../../styles/footer.sass'
 
 export default class MainFooter extends Component {
@@ -55,6 +57,19 @@ export default class MainFooter extends Component {
               </Grid.Row>
             </Grid.Container>
             <ContactData />
+            <Grid.Container>
+              <Grid.Row>
+                <Grid.Col className="text-center text-lg-right">
+                  <Button
+                    variant="outline-light"
+                    className="rounded-0"
+                    title="Go to the page top"
+                    onClick={ () => { document.body.scrollIntoView({ behavior: 'smooth', block: 'start' }) } } >
+                    <FontAwesomeIcon icon={ faChevronUp } />
+                  </Button>
+                </Grid.Col>
+              </Grid.Row>
+            </Grid.Container>
           </Grid.Row>
         </Grid.Container>
         <Grid.Container className="footer-middle bg-dark" fluid>
@@ -62,7 +77,7 @@ export default class MainFooter extends Component {
             <Grid.Container>
               <Grid.Row className="text-center justify-content-lg-center">
                 <Grid.Col xs="12" lg="auto" className="mb-3">
-                  <Link to={ RoutesMap.termsOfService.path }>Service Terms &amp; Conditions</Link>
+                  <Link to={ RoutesMap.termsOfService.path }>Terms of Service</Link>
                 </Grid.Col>
                 <Grid.Col xs="12" lg="auto" className="mb-3">
                   <Link to={ RoutesMap.privacyPolicy.path }>Privacy Policy</Link>

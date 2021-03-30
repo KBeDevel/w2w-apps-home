@@ -6,9 +6,11 @@ import Table from 'react-bootstrap/Table'
 import Image from 'react-bootstrap/Image'
 import RouterOutline, { RouterComponent } from '../../helpers/router.helper'
 import { applicationDescriptions } from '../../helpers/app-descriptor.helper'
+import ProfileProvider from '../../providers/profile.provider'
+import { handleW2WAPIResponse } from '../../helpers/form.helper'
 import RouterMap from '../../helpers/routes-map.helper'
 import { LinkContainer } from 'react-router-bootstrap'
-import { EmptyProps } from '../../types'
+import { EmptyProps, Profile } from '../../types'
 import '../../styles/dashboard.sass'
 
 type Operation = unknown & {
@@ -21,12 +23,12 @@ type Invoice = unknown & {
 
 type DashboardState = {
   operations: Operation[],
-  invoices: Invoice[]
+  invoices: Invoice[],
+  profile: Profile,
+  profileProgress: number
 }
 
 export default class Dashboard extends Component<EmptyProps, DashboardState> implements RouterComponent {
-
-  private _profileProgress = 75
 
   constructor(
     public readonly props: never
@@ -39,6 +41,20 @@ export default class Dashboard extends Component<EmptyProps, DashboardState> imp
     return {
       operations: [],
       invoices: [],
+      profile: ProfileProvider.EMPTY_PROFILE,
+      profileProgress: 0
+    }
+  }
+
+  private async getProfile(): Promise<void> {
+    const response = await ProfileProvider.getUserProfile()
+    if (!response) return
+    if (handleW2WAPIResponse(response)) {
+      this.setState({
+        ...this.state,
+        profile: response.value,
+        profileProgress: 100
+      })
     }
   }
 
@@ -66,6 +82,10 @@ export default class Dashboard extends Component<EmptyProps, DashboardState> imp
     </Grid.Row>
   }
 
+  public componentDidMount(): void {
+    this.getProfile()
+  }
+
   public preload(): void {
     CommonFunctions.updatePathTitle('Dashboard')
   }
@@ -87,9 +107,9 @@ export default class Dashboard extends Component<EmptyProps, DashboardState> imp
               </LinkContainer>
             </h2>
             {
-              this._profileProgress < 100
+              this.state.profileProgress < 100
                 ? <small className="float-lg-right d-block d-lg-flex">
-                  { this._profileProgress }% complete
+                  { this.state.profileProgress }% complete
                 </small>
                 : null
             }
@@ -102,13 +122,22 @@ export default class Dashboard extends Component<EmptyProps, DashboardState> imp
               responsive >
               <tbody>
                 <tr>
-                  <td>Name</td><td>N/A</td>
+                  <td>Name</td>
+                  <td>{ this.state.profile.organization.name }</td>
                 </tr>
                 <tr>
-                  <td>Identifification</td><td>N/A</td>
+                  <td>Identifification</td>
+                  <td>
+                    {
+                      this.state.profile.organization.identification.type
+                        ? this.state.profile.organization.identification.type + ': ' + this.state.profile.organization.identification.number
+                        : ' '
+                    }
+                  </td>
                 </tr>
                 <tr>
-                  <td>Social Reason</td><td>N/A</td>
+                  <td>Social Reason</td>
+                  <td>{ this.state.profile.organization.socialReason }</td>
                 </tr>
               </tbody>
             </Table>

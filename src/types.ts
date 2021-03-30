@@ -195,8 +195,8 @@ export type SignUpForm = AuthForm & {
 }
 
 export type ContactForm = {
-  completeName: string,
-  email: string,
+  senderName: string,
+  senderEmail: string,
   message: string
 }
 
@@ -239,6 +239,7 @@ export type SignUpFinish = {
   representative: {
     firstName: string,
     lastName: string,
+    corporativePosition?: string,
     identification: {
       type: string,
       number: string

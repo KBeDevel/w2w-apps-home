@@ -37,10 +37,11 @@ export default class ProfileProvider {
   }
 
   public static async getUserProfile(): Promise<DefaultResponse<Profile>> {
-    return (await ProvidersHelper.HttpClient.get(W2WAPI.setPath('/account/profile'), {
+    const response = await ProvidersHelper.HttpClient.get(W2WAPI.setPath('/account/profile'), {
       headers: {
         Authorization: ProvidersHelper.keys.api.privateKey()
       }
-    })).data
+    })
+    return response.data
   }
 }
