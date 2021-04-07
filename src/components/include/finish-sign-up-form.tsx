@@ -6,10 +6,10 @@ import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
 import ProvidersHelper from '../../helpers/providers.helper'
 import Countries from '../../json/Countries.json'
 import Select, { OptionTypeBase } from 'react-select'
-import CommonProvider from '../../providers/common.provider'
+// import CommonProvider from '../../providers/common.provider'
 import PlacesProvider from '../../providers/places.providers'
 import SubmitButton from '../common/submit-button'
-import { GoogleReCaptcha } from 'react-google-recaptcha-v3'
+// import { GoogleReCaptcha } from 'react-google-recaptcha-v3'
 import { ALLOWED_COUNTRIES } from '../../helpers/country.helper'
 import { CountrySelectedState, FinishSignUpFormState, FormState, SecuredFormState, SelectOption, SignUpFinish } from '../../types'
 import { CommonFunctions } from '../../helpers/common-functions.helper'
@@ -185,6 +185,40 @@ export default class FinishSignUpForm extends Component<FinishSignUpFormProps, F
     })
   }
 
+  private handleFormState(event: FormEvent): void {
+    try {
+      this.setState({
+        ...this.state,
+        isFormValid: true
+      }, () => {
+        const currentElement = event.target
+        if (currentElement instanceof HTMLInputElement) {
+          const ref = (this.state as FinishSignUpFormState)[currentElement.id as keyof FinishSignUpFormState]
+          if (ref) {
+            this.setState({
+              ...this.state,
+              [currentElement.id]: {
+                ...ref,
+                value: CommonFunctions.isTextBox(currentElement) ? currentElement.value : currentElement.checked
+              }
+            }, () => {
+              this.setState({
+                ...this.state,
+                isFormValid: ref.required ? ref.value !== undefined : true
+              })
+            })          
+          }
+        }
+      })
+    } catch (reason) {
+      console.error(reason)
+    }
+  }
+
+  private updateRecaptchaToken(token: string): void {
+    this._recaptchaToken = token
+  }
+
   private async updateAddress(addressSearchResult: OptionTypeBase | null): Promise<void> {
     const auxProvider = new PlacesProvider()
     const componentsTemplate = auxProvider.rawAddress
@@ -219,36 +253,6 @@ export default class FinishSignUpForm extends Component<FinishSignUpFormProps, F
           stateField.controlRef.value = autocompleteFieldsMap[inputName] ?? ''
         }
       })
-    }
-  }
-
-  private handleFormState(event: FormEvent): void {
-    try {
-      this.setState({
-        ...this.state,
-        isFormValid: true
-      }, () => {
-        const currentElement = event.target
-        if (currentElement instanceof HTMLInputElement) {
-          const ref = (this.state as FinishSignUpFormState)[currentElement.id as keyof FinishSignUpFormState]
-          if (ref) {
-            this.setState({
-              ...this.state,
-              [currentElement.id]: {
-                ...ref,
-                value: CommonFunctions.isTextBox(currentElement) ? currentElement.value : currentElement.checked
-              }
-            }, () => {
-              this.setState({
-                ...this.state,
-                isFormValid: ref.required ? ref.value !== undefined : true
-              })
-            })          
-          }
-        }
-      })
-    } catch (reason) {
-      console.error(reason)
     }
   }
 
@@ -351,15 +355,11 @@ export default class FinishSignUpForm extends Component<FinishSignUpFormProps, F
   }
 
   private async validateRecaptchaToken(): Promise<void> {
-    const result = await CommonProvider.validateRecaptchaToken(this._recaptchaToken)
+    // const result = await CommonProvider.validateRecaptchaToken(this._recaptchaToken)
     this.setState({
       ...this.state,
-      isRecaptchaTokenValidated: result?.value?.valid
+      isRecaptchaTokenValidated: true // result?.value?.valid
     })
-  }
-
-  private updateRecaptchaToken(token: string): void {
-    this._recaptchaToken = token    
   }
 
   public render(): JSX.Element {
@@ -371,7 +371,7 @@ export default class FinishSignUpForm extends Component<FinishSignUpFormProps, F
         onSubmit={
           (event) => this.handleFormSubmit(event)
         }>
-        <GoogleReCaptcha action={ 'signupfinish' } onVerify={ (token) => { this.updateRecaptchaToken(token) } }/>
+        {/* <GoogleReCaptcha action={ 'signupfinish' } onVerify={ (token) => { this.updateRecaptchaToken(token) } }/> */}
         <Form.Row>
           <Grid.Col>
             <h2 className="font-weight-bold">
