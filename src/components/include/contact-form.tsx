@@ -185,7 +185,7 @@ export default class ContactForm extends Component<EmptyProps, ContactFormMessag
         <Grid.Row>
           <Grid.Col>
             <Form name="contactForm" onSubmit={ (event) => { this.handleFormSubmit(event) } }>
-              <GoogleReCaptcha action={ 'contact' } runOnlyOnMount={ true } onVerify={ (token) => { this.updateRecaptchaToken(token) } } />
+              <GoogleReCaptcha action={ 'contact' } onVerify={ (token) => { this.updateRecaptchaToken(token) } } />
               <Form.Group controlId="contactName">
                 <Form.Label>Your name</Form.Label>
                 <Form.Control
