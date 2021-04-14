@@ -73,7 +73,7 @@ export default class MainNavbar extends Component {
           </LinkContainer>
           <Navbar.Toggle aria-controls="main-navbar-links"/>
           <Navbar.Collapse id="main-navbar-links">
-            <Nav className="ml-auto">
+            <Nav className="ml-auto text-center text-lg-left">
               {
                 this._isAuthenticated
                   ? <>
@@ -97,14 +97,39 @@ export default class MainNavbar extends Component {
                       <Nav.Link>Home</Nav.Link>
                     </LinkContainer>
                     { this.baseLinks() }
-                    <Form inline className="d-inline-flex">
+                    <Form inline className="d-inline-flex d-lg-none">
                       {
                         !this.checkNoNewUserPath()
-                          ? <LinkContainer to={ RoutesMap.signUp.path }>
-                            <Button variant="warning" className="btn-sm mx-2 mr-lg-0">
-                              <b>Create Free Account</b>
-                            </Button>
-                          </LinkContainer>
+                          ? <>
+                            <LinkContainer to={ RoutesMap.signIn.path }>
+                              <Button variant="outline-light" size="sm" className="mx-2 ml-lg-2 mr-lg-0 btn-block">
+                                <b>Sign In</b>
+                              </Button>
+                            </LinkContainer>
+                            <LinkContainer to={ RoutesMap.signUp.path }>
+                              <Button variant="warning" size="sm" className="mx-2 mr-lg-0 btn-block">
+                                <b>Create Free Account</b>
+                              </Button>
+                            </LinkContainer>
+                          </>
+                          : <></>
+                      }
+                    </Form>
+                    <Form inline className="d-none d-lg-inline-flex">
+                      {
+                        !this.checkNoNewUserPath()
+                          ? <>
+                            <LinkContainer to={ RoutesMap.signIn.path }>
+                              <Button variant="outline-light" size="sm" className="mx-2 ml-lg-2 mr-lg-0">
+                                <b>Sign In</b>
+                              </Button>
+                            </LinkContainer>
+                            <LinkContainer to={ RoutesMap.signUp.path }>
+                              <Button variant="warning" size="sm" className="mx-2 mr-lg-0">
+                                <b>Create Free Account</b>
+                              </Button>
+                            </LinkContainer>
+                          </>
                           : <></>
                       }
                     </Form>
