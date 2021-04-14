@@ -1,16 +1,15 @@
 import { Component } from 'react'
 import { CommonFunctions } from '../../helpers/common-functions.helper'
-import RouterOutline, { RouterComponent } from '../../helpers/router.helper'
+import RouterOutline from '../../helpers/router.helper'
 import Grid from '../../helpers/grid.helper'
 import ContactForm from '../include/contact-form'
 
-class ContactUs extends Component implements RouterComponent {
-  public preload(): void {
+class ContactUs extends Component {
+  public componentDidMount(): void {
     CommonFunctions.updatePathTitle('Contact')
   }
 
   public render(): JSX.Element {
-    this.preload()
     return RouterOutline.set(
       <Grid.Container>
         <Grid.Row>

@@ -17,6 +17,10 @@ export type SignInFormFields = {
 }
 
 export type SignUpFormFields = {
+  signUpPhonePrefix: FormField<string>,
+  signUpPhone: FormField<string>,
+  signUpName: FormField<string>,
+  signUpSurname: FormField<string>
   signUpUserId: FormField<string>,
   signUpPassword: FormField<string>,
   signUpConfirmPassword: FormField<string>,
@@ -203,12 +207,19 @@ export type ContactForm = {
 export type SignUpInit = {
   /**
    * Assign as a Base64 string
+   * @deprecated in favor of `userId`. This field will be removed in the future versions
    */
   email: string,
   /**
    * Assign as a Base64 string
    */
   userId?: string,
+  firstname: string,
+  lastname: string,
+  phone: {
+    code: string,
+    number: string
+  },
   /**
    * Assign as a SHA512 hash
    */

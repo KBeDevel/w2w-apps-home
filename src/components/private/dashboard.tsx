@@ -4,7 +4,7 @@ import Grid from '../../helpers/grid.helper'
 import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
 import Image from 'react-bootstrap/Image'
-import RouterOutline, { RouterComponent } from '../../helpers/router.helper'
+import RouterOutline from '../../helpers/router.helper'
 import { applicationDescriptions } from '../../helpers/app-descriptor.helper'
 import ProfileProvider from '../../providers/profile.provider'
 import { handleW2WAPIResponse } from '../../helpers/form.helper'
@@ -28,7 +28,7 @@ type DashboardState = {
   profileProgress: number
 }
 
-export default class Dashboard extends Component<EmptyProps, DashboardState> implements RouterComponent {
+export default class Dashboard extends Component<EmptyProps, DashboardState> {
 
   constructor(
     public readonly props: never
@@ -83,15 +83,11 @@ export default class Dashboard extends Component<EmptyProps, DashboardState> imp
   }
 
   public componentDidMount(): void {
+    CommonFunctions.updatePathTitle('Dashboard')
     this.getProfile()
   }
 
-  public preload(): void {
-    CommonFunctions.updatePathTitle('Dashboard')
-  }
-
   public render(): JSX.Element {
-    this.preload()
     return RouterOutline.set(
       <Grid.Container>
         <Grid.Row>

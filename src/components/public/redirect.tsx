@@ -1,7 +1,7 @@
 import { Component } from 'react'
 import { CommonFunctions } from '../../helpers/common-functions.helper'
 import Grid from '../../helpers/grid.helper'
-import RouterOutline, { RouterComponent } from '../../helpers/router.helper'
+import RouterOutline from '../../helpers/router.helper'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSyncAlt } from '@fortawesome/free-solid-svg-icons'
 
@@ -13,13 +13,13 @@ type RedirectRouteParams = {
   }
 }
 
-export default class Redirector extends Component<RedirectRouteParams> implements RouterComponent {
+export default class Redirector extends Component<RedirectRouteParams> {
 
   private _destinationHash = this.props.match.params.destinationHash
   public destinationUrl: string | undefined = undefined
   public message = 'Redirecting'
 
-  public preload(): void {
+  public componentDidMount(): void {
     try {
       // Validate destination url
       const destination = CommonFunctions.Base64.decode(this._destinationHash)
@@ -38,7 +38,6 @@ export default class Redirector extends Component<RedirectRouteParams> implement
   }
 
   public render(): JSX.Element {
-    this.preload()
     return RouterOutline.set(
       <Grid.Container>
         <Grid.Row>

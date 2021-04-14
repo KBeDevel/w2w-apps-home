@@ -1,6 +1,6 @@
 import { Component, MouseEvent } from 'react'
 import { CommonFunctions } from '../../helpers/common-functions.helper'
-import RouterOutline, { RouterComponent } from '../../helpers/router.helper'
+import RouterOutline from '../../helpers/router.helper'
 import { Link } from 'react-router-dom'
 import { OurServices } from './services'
 import Grid from '../../helpers/grid.helper'
@@ -259,13 +259,12 @@ class HomeBody extends Component {
   }
 }
 
-export default class Home extends Component implements RouterComponent {
-  public preload(): void {
+export default class Home extends Component {
+  public componentDidMount(): void {
     CommonFunctions.updatePathTitle('Home')
   }
 
   public render(): JSX.Element {
-    this.preload()
     return RouterOutline.set(
       <>
         <HomeBanner/>

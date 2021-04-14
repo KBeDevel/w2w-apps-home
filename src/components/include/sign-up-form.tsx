@@ -9,12 +9,14 @@ import SubmitButton from '../common/submit-button'
 import PasswordField from '../common/password-field'
 import { GoogleReCaptcha } from 'react-google-recaptcha-v3'
 import { Link } from 'react-router-dom'
-import { getControlValidationState, handleW2WAPIResponse } from '../../helpers/form.helper'
-import { EmptyProps, FormState, SecuredFormState, SignUpFormFields, SignUpInit } from '../../types'
+import { defaultSelectStyles, getControlValidationState, handleW2WAPIResponse } from '../../helpers/form.helper'
+import { EmptyProps, FormState, SecuredFormState, SelectOption, SignUpFormFields, SignUpInit } from '../../types'
 import { LinkContainer } from 'react-router-bootstrap'
 import { CommonFunctions, Default, PasswordStatus } from '../../helpers/common-functions.helper'
 import AccountProvider from '../../providers/account.provider'
+import Select from 'react-select'
 import Swal from 'sweetalert2'
+import Countries from '../../json/Countries.json'
 import '../../styles/form.sass'
 
 type SignUpInitState = {
@@ -24,6 +26,7 @@ type SignUpInitState = {
 
 export default class SignUpForm extends Component<EmptyProps, SignUpFormFields & SignUpInitState & FormState & SecuredFormState> {
 
+  private _allowedPhonesPrefixesOptions: SelectOption[] = []
   private _recaptchaToken!: string
 
   constructor(
@@ -39,6 +42,22 @@ export default class SignUpForm extends Component<EmptyProps, SignUpFormFields &
       isSubmitting: false,
       isRecaptchaTokenValidated: false,
       passwordMatching: true,
+      signUpPhonePrefix: {
+        required: true,
+        value: undefined
+      },
+      signUpPhone: {
+        required: true,
+        value: undefined
+      },
+      signUpName: {
+        required: true,
+        value: undefined
+      },
+      signUpSurname: {
+        required: true,
+        value: undefined
+      },
       signUpUserId: {
         required: true,
         value: undefined
@@ -56,6 +75,23 @@ export default class SignUpForm extends Component<EmptyProps, SignUpFormFields &
         value: undefined
       },
     } as SignUpFormFields & SignUpInitState & FormState & SecuredFormState
+  }
+
+  private getAllowedCountriesPhoneCodes(newCountry = 'br'): void {
+    this._allowedPhonesPrefixesOptions = Countries.filter(
+      country => country.twoDigitCode.toLowerCase() === newCountry.toLowerCase()
+    ).map((country) => {
+      return { label: `${country.flag} +${country.phoneCode}`, value: `+${country.phoneCode}` }
+    })
+    if (this._allowedPhonesPrefixesOptions.length > 0) {
+      this.setState({
+        ...this.state,
+        signUpPhonePrefix: {
+          ...this.state.signUpPhonePrefix,
+          value: this._allowedPhonesPrefixesOptions[0].value
+        }
+      })
+    }
   }
 
   private updateStateFromInput(inputElement: HTMLInputElement): void {
@@ -104,6 +140,7 @@ export default class SignUpForm extends Component<EmptyProps, SignUpFormFields &
         break
       }
     }
+    valid = true
     this.setState({
       ...this.state,
       isFormValid: valid
@@ -112,6 +149,7 @@ export default class SignUpForm extends Component<EmptyProps, SignUpFormFields &
 
   private handleFormChange(event: ChangeEvent | FormEvent<HTMLInputElement> | KeyboardEvent<HTMLInputElement>): void {
     if (event.target instanceof HTMLInputElement) {
+      console.log('Current value for control ' + event.target.id + ':', event.target.value)
       this.updateStateFromInput(event.target)
       this.checkFieldsValidity()
     }
@@ -140,20 +178,35 @@ export default class SignUpForm extends Component<EmptyProps, SignUpFormFields &
     const signUpInitData: SignUpInit = {
       email: CommonFunctions.Base64.encode(this.state.signUpUserId.value as string),
       userId: CommonFunctions.Base64.encode(this.state.signUpUserId.value as string),
+      firstname: this.state.signUpName?.value as string,
+      lastname: this.state.signUpSurname?.value as string,
+      phone: {
+        code: this.state.signUpPhonePrefix?.value as string,
+        number: this.state.signUpPhone?.value as string,
+      },
       password: CommonFunctions.SHA512.create(this.state.signUpPassword.value as string),
       terms: this.state.signUpTerms.value as boolean
     }
+    console.log('Submitting data:', signUpInitData)
     this.setState({
       ...this.state,
       isSubmitting: true
     }, () => {
       AccountProvider.signUpInit(signUpInitData).then((response) => {
-        if (!handleW2WAPIResponse(response)) {
+        if (handleW2WAPIResponse(response)) {
           if (response.value.status === 'OK' && this.state.signUpUserId.value) {
             Swal.fire({
               icon: 'success',
               title: `We sent an email. Please check the ${this.state.signUpUserId.value} inbox`,
               text: 'This process is necessary to continue the registration process'
+            }).then(() => {
+              location.href = '/home'
+            })
+          } else {
+            Swal.fire({
+              icon: 'warning',
+              title: 'Unexpected error',
+              text: 'Please contact us to help you tu resolve this'
             })
           }
         }
@@ -164,6 +217,10 @@ export default class SignUpForm extends Component<EmptyProps, SignUpFormFields &
         })
       })
     })
+  }
+
+  public componentDidMount(): void {
+    this.getAllowedCountriesPhoneCodes()
   }
 
   public render(): JSX.Element {
@@ -179,6 +236,66 @@ export default class SignUpForm extends Component<EmptyProps, SignUpFormFields &
           <small className="text-muted">Use a <b>single account</b> to access to all We To World applications.</small>
         </Form.Group>
         <div className="py-3" />
+        <Form.Row>
+          <Grid.Col xs="12" lg>
+            <Form.Group controlId="signUpName">
+              <Form.Label>
+                Name
+              </Form.Label>
+              <Form.Control
+                type="text"
+                required={ this.state.signUpName?.required }
+                onChange={ (event) => { this.handleFormChange(event) } }  />
+            </Form.Group>
+          </Grid.Col>
+          <Grid.Col xs="12" lg>
+            <Form.Group controlId="signUpSurname">
+              <Form.Label>
+                Surname
+              </Form.Label>
+              <Form.Control
+                type="text"
+                required={ this.state.signUpSurname?.required }
+                onChange={ (event) => { this.handleFormChange(event) } }  />
+            </Form.Group>
+          </Grid.Col>
+        </Form.Row>
+        <Form.Row>
+          <Grid.Col xs="12" lg>
+            <Form.Group controlId="signUpPhonePrefix">
+              <Form.Label 
+                className={ this.state.signUpPhonePrefix.required ? '' : 'optional' } >
+                Phone
+              </Form.Label>
+              <Select
+                inputId="signUpPhonePrefix"
+                name="signUpPhonePrefix"
+                options={ this._allowedPhonesPrefixesOptions }
+                isSearchable={ false }
+                value={
+                  this._allowedPhonesPrefixesOptions.find(
+                    option => option.value === this.state.signUpPhonePrefix?.value
+                  )
+                }
+                placeholder="Select code"
+                isDisabled={ this._allowedPhonesPrefixesOptions.length === 0 }
+                tabSelectsValue={ true }
+                styles={ defaultSelectStyles } />
+            </Form.Group>
+          </Grid.Col>
+          <Grid.Col xs="12" lg="8">
+            <Form.Group controlId="signUpPhone">
+              <Form.Label
+                className="conditional" >
+                <wbr />
+              </Form.Label>
+              <Form.Control
+                type="text"
+                required={ this.state.signUpPhone.required }
+                onChange={ (event) => { this.handleFormChange(event) } } />
+            </Form.Group>
+          </Grid.Col>
+        </Form.Row>
         <Form.Group controlId="signUpUserId">
           <Form.Label>Please specify an email to start</Form.Label>
           <Form.Control

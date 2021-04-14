@@ -1,13 +1,12 @@
 import { Component } from 'react'
 import { CommonFunctions } from '../../helpers/common-functions.helper'
 import Grid from '../../helpers/grid.helper'
-import RouterOutline, { RouterComponent } from '../../helpers/router.helper'
+import RouterOutline from '../../helpers/router.helper'
 import SignUpForm from '../include/sign-up-form'
-
 import '../../styles/sign-up.sass'
 
-export default class SignUp extends Component implements RouterComponent {
-  public preload(): void {
+export default class SignUp extends Component {
+  public componentDidMount(): void {
     CommonFunctions.updatePathTitle('Create Account')
     document.body.scrollIntoView({
       behavior: 'smooth',
@@ -16,7 +15,6 @@ export default class SignUp extends Component implements RouterComponent {
   }
 
   public render(): JSX.Element {
-    this.preload()
     return RouterOutline.set(
       <Grid.Container fluid className="h-100">
         <Grid.Row className="sign-up-background">

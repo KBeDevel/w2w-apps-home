@@ -1,16 +1,15 @@
 import { Component } from 'react'
 import { CommonFunctions } from '../../helpers/common-functions.helper'
 import Grid from '../../helpers/grid.helper'
-import RouterOutline, { RouterComponent } from '../../helpers/router.helper'
+import RouterOutline from '../../helpers/router.helper'
 
-export default class TermsOfService extends Component implements RouterComponent {
-  public preload(): void {
+export default class TermsOfService extends Component {
+  public componentDidMount(): void {
     CommonFunctions.updatePathTitle('Service Terms and Conditions')
     document.body.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
   public render(): JSX.Element {
-    this.preload()
     return RouterOutline.set(
       <Grid.Container>
         <Grid.Row>

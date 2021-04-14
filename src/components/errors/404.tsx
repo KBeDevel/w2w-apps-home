@@ -1,17 +1,16 @@
 import { Component } from 'react'
 import { CommonFunctions } from '../../helpers/common-functions.helper'
-import RouterOutline, { RouterComponent } from '../../helpers/router.helper'
+import RouterOutline from '../../helpers/router.helper'
 import Grid from '../../helpers/grid.helper'
 
 import Error404Icon from '-!react-svg-loader!../../assets/svg/error-404.svg'
 
-export default class NotFound extends Component implements RouterComponent {
-  public preload(): void {
+export default class NotFound extends Component {
+  public componentDidMount(): void {
     CommonFunctions.updatePathTitle('Error 404 - Resource Not Found')
   }
 
   public render(): JSX.Element {
-    this.preload()
     return RouterOutline.set(
       <Grid.Container>
         <Grid.Row>

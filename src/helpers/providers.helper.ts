@@ -63,6 +63,9 @@ export default class ProvidersHelper {
       publicKey: process.env.REACT_APP_KEY_API_PUBLIC_TOKEN ?? '',
       privateKey: ProvidersHelper.getPrivateToken
     },
+    hubspot: {
+      tracking: process.env.REACT_APP_KEY_HUBSPOT_TRACKING_KEY
+    },
     google: {
       places: {
         autocomplete: process.env.REACT_APP_KEY_PLACES_AUTOCOMPLETE_PUBLIC_TOKEN ?? '',

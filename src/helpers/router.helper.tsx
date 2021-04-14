@@ -7,10 +7,6 @@ import { Redirect, Route, RouteProps } from 'react-router-dom'
 import { CommonFunctions } from './common-functions.helper'
 import '../styles/route-layout.sass'
 
-export interface RouterComponent {
-  preload(): void
-}
-
 export default class RouterOutline {
   public static set(children: JSX.Element, className?: string | undefined): JSX.Element {
     return (

@@ -2,6 +2,7 @@ import ProvidersHelper, { W2WAPI } from '../helpers/providers.helper'
 import { AuthenticationResponse, Credentials, DefaultResponse, SessionData, SignUpFinish, SignUpInit } from '../types'
 import { CommonFunctions } from '../helpers/common-functions.helper'
 import RoutesMap from '../helpers/routes-map.helper'
+import jwt from 'jsonwebtoken'
 import Swal from 'sweetalert2'
 
 export default class AccountProvider {
@@ -32,8 +33,23 @@ export default class AccountProvider {
   }
 
   public static isAuthenticated(): boolean {
-    return !!localStorage.getItem(ProvidersHelper.LocalStorage.sessionData)
-    return true
+    const sessionDataRaw = localStorage.getItem(ProvidersHelper.LocalStorage.sessionData)
+    if (!sessionDataRaw) {
+      return false
+    }
+    const sessionData = JSON.parse(CommonFunctions.Base64.decode(localStorage.getItem(ProvidersHelper.LocalStorage.sessionData) as string)) as SessionData
+    try {
+      const decodedToken = jwt.decode(CommonFunctions.Base64.decode(sessionData.token))
+      const currentTimestamp = parseInt((Date.now() / 1000).toFixed(0))
+      const tokenExpirationTimestamp = (decodedToken as { [key: string]: unknown })?.exp as number
+      if (tokenExpirationTimestamp <= currentTimestamp) {
+        AccountProvider.closeSession(true)
+      }
+      return !!decodedToken
+    } catch (reason) {
+      console.error('JWT decoding error:', reason)
+      return false
+    }
   }
 
   public static readSessionData(): SessionData | null {

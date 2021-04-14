@@ -1,7 +1,7 @@
 import { Component } from 'react'
 import Grid from '../../helpers/grid.helper'
 import { CommonFunctions } from '../../helpers/common-functions.helper'
-import RouterOutline, { RouterComponent } from '../../helpers/router.helper'
+import RouterOutline from '../../helpers/router.helper'
 import FinishSignUpForm from '../include/finish-sign-up-form'
 import AccountProvider from '../../providers/account.provider'
 import Error403Icon from '-!react-svg-loader!../../assets/svg/error-403.svg'
@@ -22,7 +22,7 @@ type FinishSignUpState = {
   isTokenValidated: boolean
 }
 
-export default class FinishSignUp extends Component<FinishSignUpProps, FinishSignUpState> implements RouterComponent {
+export default class FinishSignUp extends Component<FinishSignUpProps, FinishSignUpState> {
   private signUpToken!: string
 
   constructor(
@@ -48,7 +48,7 @@ export default class FinishSignUp extends Component<FinishSignUpProps, FinishSig
     })
   }
 
-  public preload(): void {
+  public componentDidMount(): void {
     CommonFunctions.updatePathTitle('Finish Your Sign Up')
     document.body.scrollIntoView({
       behavior: 'smooth',
@@ -57,7 +57,6 @@ export default class FinishSignUp extends Component<FinishSignUpProps, FinishSig
   }
 
   public render(): JSX.Element {
-    this.preload()
     if (this.state.isValidatingToken) {
       this.verifySignUpToken()
     }

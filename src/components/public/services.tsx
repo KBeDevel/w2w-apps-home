@@ -1,6 +1,6 @@
 import { Component } from 'react'
 import { CommonFunctions } from '../../helpers/common-functions.helper'
-import RouterOutline, { RouterComponent } from '../../helpers/router.helper'
+import RouterOutline from '../../helpers/router.helper'
 import Grid from '../../helpers/grid.helper'
 import Card from 'react-bootstrap/Card'
 
@@ -103,13 +103,12 @@ export class OurServices extends Component {
   }
 }
 
-export default class Services extends Component implements RouterComponent {
-  public preload(): void {
-    CommonFunctions.updatePathTitle('Services')  
+export default class Services extends Component {
+  public componentDidMount(): void {
+    CommonFunctions.updatePathTitle('Services')
   }
 
   public render(): JSX.Element {
-    this.preload()
     return RouterOutline.set(
       <>
         <Grid.Container>

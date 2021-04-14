@@ -1,18 +1,16 @@
 import { Component } from 'react'
 import Grid from '../../helpers/grid.helper'
 import { CommonFunctions } from '../../helpers/common-functions.helper'
-import RouterOutline, { RouterComponent } from '../../helpers/router.helper'
+import RouterOutline from '../../helpers/router.helper'
 import SignInForm from '../include/sign-in-form'
-
 import '../../styles/sign-in.sass'
 
-export default class SignIn extends Component implements RouterComponent {
-  public preload(): void {
+export default class SignIn extends Component {
+  public componentDidMount(): void {
     CommonFunctions.updatePathTitle('Sign In')
   }
 
   public render(): JSX.Element {
-    this.preload()
     return RouterOutline.set(
       <Grid.Container fluid>
         <Grid.Row className="sign-in-background">

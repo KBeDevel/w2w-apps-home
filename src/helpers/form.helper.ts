@@ -17,9 +17,7 @@ export interface SubmitButtonProps {
 }
 
 export function getControlValidationState(fieldData: FormField | undefined): boolean {
-  return fieldData?.required ? (
-    !!fieldData.value
-  ) : true
+  return fieldData?.required ? !!fieldData.value : true
 }
 
 export function handleW2WAPIResponse(response: DefaultResponse<unknown>): boolean {

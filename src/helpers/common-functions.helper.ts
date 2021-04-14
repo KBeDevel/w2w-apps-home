@@ -68,19 +68,28 @@ export class CommonFunctions {
    * @param stringToCapitalize `string` to be capitalized
    * @param mode Set `simple` to upper case the first letter or `full` to capitalize each word. By default is `simple`
    */
-  public static capitalize(stringToCapitalize: string, mode: 'simple' | 'full' = 'simple'): string {
+  public static capitalize(stringToCapitalize: string, mode: 'simple' | 'full' = 'simple', forceSplit = false): string {
+    if (forceSplit) {
+      const formattedString: string[] = []
+      const splittedString = Array.from(stringToCapitalize)
+      for (const char of splittedString) {
+        if (char === char.toUpperCase() && splittedString[splittedString.indexOf(char) - 1] !== ' ') {
+          formattedString.push(' ' + char)
+        } else {
+          formattedString.push(char)
+        }
+      }
+      stringToCapitalize = formattedString.join('')
+    }
     if (mode === 'full') {
-      const words = stringToCapitalize.toLowerCase().split(' ')
+      const words = `${stringToCapitalize}`.toLowerCase().split(' ')
       for (const word of words) {
-        const newWord = word.charAt(0).toUpperCase() + word.substring(1)
-        words[words.indexOf(word)] = newWord
+        words[words.indexOf(word)] = CommonFunctions.capitalize(word)
       }
       return words.join(' ')
     } else {
-      const lowerCaseText = stringToCapitalize.trimStart().toLowerCase() // Remove empty characters
-      return lowerCaseText.length > 0
-        ? lowerCaseText[0].toUpperCase() + lowerCaseText.substr(1)
-        : ''
+      const lowerCaseText = `${stringToCapitalize}`.trim().toLowerCase() // Remove empty characters
+      return lowerCaseText[0].toUpperCase() + lowerCaseText.substr(1)
     }
   }
 
