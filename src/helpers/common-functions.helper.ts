@@ -69,6 +69,7 @@ export class CommonFunctions {
    * @param mode Set `simple` to upper case the first letter or `full` to capitalize each word. By default is `simple`
    */
   public static capitalize(stringToCapitalize: string, mode: 'simple' | 'full' = 'simple', forceSplit = false): string {
+    if (stringToCapitalize.trim() === '') return ''
     if (forceSplit) {
       const formattedString: string[] = []
       const splittedString = Array.from(stringToCapitalize)
@@ -88,8 +89,8 @@ export class CommonFunctions {
       }
       return words.join(' ')
     } else {
-      const lowerCaseText = `${stringToCapitalize}`.trim().toLowerCase() // Remove empty characters
-      return lowerCaseText[0].toUpperCase() + lowerCaseText.substr(1)
+      const lowerCaseText = `${stringToCapitalize}`.toLowerCase() // Remove empty characters
+      return lowerCaseText?.length > 0 ? lowerCaseText[0].toUpperCase() + lowerCaseText.substr(1) : ''
     }
   }
 
