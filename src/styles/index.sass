@@ -7,17 +7,10 @@
 @import ./_colors
 
 // GROUP: Global styles
-html
-  scrollbar-width: auto
-  scrollbar-color: $light-gray-accent $light-gray
-  &::-webkit-scrollbar
-    width: 8px
-  &::-webkit-scrollbar-track
-    background: $light-gray
-  &::-webkit-scrollbar-thumb
-    background-color: $light-gray
-    border: 1px solid $light-gray-accent
-    border-radius: 1px
+@-moz-document url-prefix()
+  html
+    scrollbar-width: auto
+    scrollbar-color: $dark-gray $light-gray-accent
 
 body
   margin: 0
