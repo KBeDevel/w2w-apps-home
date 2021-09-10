@@ -12,7 +12,6 @@ export default class AccountProvider {
         Authorization: ProvidersHelper.keys.api.publicKey
       }
     })
-    console.log(response.config)
     return response.data
   }
 
@@ -63,7 +62,7 @@ export default class AccountProvider {
   public static closeSession(redirect = false): boolean {
     localStorage.removeItem(ProvidersHelper.LocalStorage.sessionData)
     if (redirect) {
-      window.location.href = RoutesMap.signIn.path
+      window.location.href = RoutesMap.home.path
     }
     return !localStorage.getItem(ProvidersHelper.LocalStorage.sessionData)
   }

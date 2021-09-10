@@ -40,7 +40,7 @@ axios.interceptors.response.use(
 //#endregion
 
 export class W2WAPI {
-  public static baseLink = 'https://api.luminant.cl/luminant'
+  public static baseLink = process.env.REACT_APP_BASE_API_URL ?? ''
 
   /**
    * Returns the complete api url
@@ -57,16 +57,10 @@ export default class ProvidersHelper {
   public static readonly LocalStorage = {
     sessionData: 'session'
   }
-  public static readonly LocalOrder = {
-    orderData: 'order',
-  }
-  public static readonly LocalOrderResponse = {
-    orderResponse: 'response'
-  }
 
   public static readonly keys = {
     api: {
-      publicKey: 'pAxSz04efZ0rOKnI1yJ7Zd5WE6sZc1qg57bq8sXkXrEWqL3McLXy1O8mMSPnhdK0pCLso2gVzqjBiOkToX8wg190jBiUi5PI5bd9dwZIYXxlGTo4mjQOueIGSLnCo5gp',
+      publicKey: process.env.REACT_APP_KEY_API_PUBLIC_TOKEN ?? '',
       privateKey: ProvidersHelper.getPrivateToken
     },
     hubspot: {

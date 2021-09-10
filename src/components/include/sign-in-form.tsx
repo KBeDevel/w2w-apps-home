@@ -1,6 +1,7 @@
 import { Component, ChangeEvent, FormEvent } from 'react'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
+import CommonProvider from '../../providers/common.provider'
 import Grid from '../../helpers/grid.helper'
 import RecaptchaDisclaimer from '../common/recaptcha-disclaimer'
 import RoutesMap from '../../helpers/routes-map.helper'
@@ -85,10 +86,10 @@ export default class SignInForm extends Component<EmptyProps, SignInFormFields &
   }
 
   private async validateRecaptchaToken(): Promise<void> {
-    // const result = await CommonProvider.validateRecaptchaToken(this._recaptchaToken)
+    const result = await CommonProvider.validateRecaptchaToken(this._recaptchaToken)
     this.setState({
       ...this.state,
-      isRecaptchaTokenValidated: true
+      isRecaptchaTokenValidated: result?.value?.valid
     })
   }
 
@@ -97,8 +98,8 @@ export default class SignInForm extends Component<EmptyProps, SignInFormFields &
 
     if (!event.isTrusted) return
 
-    // await this.validateRecaptchaToken()
-    // if (!this.state.isRecaptchaTokenValidated) return
+    await this.validateRecaptchaToken()
+    if (!this.state.isRecaptchaTokenValidated) return
 
     const signInData: Credentials = {
       userId: CommonFunctions.Base64.encode(this.state.signInUserId.value as string),
@@ -132,20 +133,20 @@ export default class SignInForm extends Component<EmptyProps, SignInFormFields &
       }
       <Form.Group>
         <h2 className="font-weight-bold">
-        Bienvenido de nuevo
+          Welcome Back
         </h2>
-        <small className="text-muted">Introduzca sus credenciales para continuar</small>
+        <small className="text-muted">Enter your credentials to continue</small>
       </Form.Group>
       <div className="py-3" />
       <Form.Group controlId="signInUserId">
-        <Form.Label>Correo electrónico</Form.Label>
+        <Form.Label>Username or Email</Form.Label>
         <Form.Control
           type="text"
           required={ this.state.signInUserId.required }
           onChange={ (event) => { this.handleFormChange(event) } } />
       </Form.Group>
       <Form.Group controlId="signInPassword">
-        <Form.Label>Contraseña</Form.Label>
+        <Form.Label>Password</Form.Label>
         <Form.Control
           type="password"
           required={ this.state.signInPassword.required }
@@ -156,7 +157,7 @@ export default class SignInForm extends Component<EmptyProps, SignInFormFields &
         <Grid.Col className="text-center">
           <Form.Switch
             id="signInRemember"
-            label="Recuérdame"
+            label="Remember Me"
             required={ this.state.signInRemember?.required }
             onChange={ (event) => { this.handleFormChange(event) } } />
         </Grid.Col>
@@ -170,14 +171,14 @@ export default class SignInForm extends Component<EmptyProps, SignInFormFields &
             type="submit"
             disableIf={ !this.state.isFormValid }
             isSubmitting={ this.state.isSubmitting }
-            buttonText={ 'Iniciar' } />
+            buttonText={ 'Enter' } />
         </Grid.Col>
       </Grid.Row>
       <Grid.Row className="justify-content-center my-2">
         <Grid.Col xs="12" lg="6">
           <LinkContainer to={ RoutesMap.signUp.path }>
             <Button variant="warning" block>
-              <b>Crear una cuenta</b>
+              <b>Create Free Account</b>
             </Button>
           </LinkContainer>
         </Grid.Col>
