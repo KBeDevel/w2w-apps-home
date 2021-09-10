@@ -5,7 +5,6 @@ export type FormState = {
   isSubmitting: boolean,
   isFormValid: boolean
 }
-
 export type SecuredFormState = {
   isRecaptchaTokenValidated: boolean
 }
@@ -16,6 +15,47 @@ export type SignInFormFields = {
   signInRemember?: FormField<boolean>
 }
 
+export type CalculatorResponse = {
+  courier: TrackingType,
+  serviceCode: number,
+  weight: number,
+  cost: number
+}
+
+export type ContactBookResponse= {
+  addressAdd: boolean
+}
+
+export type CalculatorFormFields = {
+  //origin
+  origin: FormField<number>,
+
+  //destination
+  destination: FormField<number>,
+
+  //package
+  calcWeight: FormField<number>,
+  calcLenght: FormField<number>,
+  calcHeight: FormField<number>,
+  calcWidth: FormField<number>,
+  calcPrice: FormField<number>,
+
+}
+export type ContactsBFormFields = {
+  cBookLabel: FormField<string>,
+  cBookStreetName: FormField<string>,
+  cBookStreetNumber: FormField<string>,
+  cBookCountry: FormField<string>,
+  cBookComune: FormField<string>,
+  cBookState: FormField<string>,
+  cBookCity: FormField<string>,
+  cBookName: FormField<string>,
+  cBookEmail: FormField<string>,
+  cBookIdentNumber: FormField<string>,
+  cBookIdentType: FormField<string>,
+  cBookPhoneNumber: FormField<string>,
+  cBookPhonePrefix: FormField<string>,
+}
 export type SignUpFormFields = {
   signUpPhonePrefix: FormField<string>,
   signUpPhone: FormField<string>,
@@ -126,7 +166,7 @@ export type SelectOption = {
   description?: string
 }
 
-export type FormField<FieldType = string | number | bigint | boolean | string[] | Blob | Blob[]> = {
+export type FormField<FieldType = string | number | bigint | boolean | string[] | Blob | ContactsBookBody | Blob[]> = {
   readonly required: boolean,
   value: FieldType | undefined,
   readonly controlRef?: HTMLInputElement,
@@ -180,6 +220,15 @@ export type Address = {
 }
 
 export type Profile = SignUpFinish
+
+//Contact Notebook
+export type ContactNotebook = ContactsBookBody
+
+// Order Function
+export type Order = OrderBody
+
+// calculator function
+export type Calculator = CalculatorFormFields
 //#endregion
 
 //#region Request Body
@@ -194,6 +243,98 @@ export type Credentials = AuthForm & AccountRemember & {
   password: string
 }
 
+export interface ContactsBookBody {
+  _id?: string,
+  label?: string,
+  user?: string,
+  street: {
+    number: string,
+    name: string,
+  }
+  department?: string,
+  city: string,
+  state: string,
+  commune: string,
+  country: string,
+  contact?: Contacts
+}
+
+export interface Contacts {
+  name: string,
+  email: string,
+  identification:{
+    type: string
+    number: string,
+  },
+  phone?:{
+    number: string,
+    code: string
+  }
+}
+
+export type CalculatorBody = {
+  origin: ContactsBookBody,
+  destination: ContactsBookBody,
+  package: IPackage
+  applyDiscountOf?: number
+  operationId?: string
+}
+
+export interface IPackage {
+  _id?: string
+  order?: string
+  product?: string
+  description?: string
+  pieces?: string
+  dims: {
+    height: number
+    length: number
+    width: number
+    unit?: string
+  }
+  weight: {
+    value?: number
+    unit?: string
+  }
+  volumetric?: {
+    value?: number
+    unit?: string
+  }
+  chargeableWeight?: {
+    value?: number
+    unit?: string
+  }
+  price: {
+    value: number
+    currency?: string
+  }
+  createdAt?: number
+  updatedAt?: number
+  deletedAt?: number
+}
+
+export type OrderBody = {
+  service: {
+    courier: TrackingType,
+    code: number,
+    value: number
+  }
+  origin: ContactNotebook
+  destination: ContactNotebook
+  packages: IPackage[]
+}
+
+export type OrderResponse = {
+  createOrder?: true,
+  operation: string,
+  tracking?: string
+}
+
+export type PaymentResponse = {
+  name: string,
+  url: string
+}
+
 export type SignUpForm = AuthForm & {
   terms: boolean
 }
@@ -202,6 +343,13 @@ export type ContactForm = {
   senderName: string,
   senderEmail: string,
   message: string
+}
+
+export enum TrackingType {
+  chilexpress = 'chilexpress',
+  correrChile = 'Correos de chile',
+  ecl = 'ecl',
+  express = 'express'
 }
 
 export type SignUpInit = {

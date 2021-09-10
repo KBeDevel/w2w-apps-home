@@ -1,17 +1,15 @@
-import { Component, MouseEvent } from 'react'
-import { CommonFunctions } from '../../helpers/common-functions.helper'
+import { Component } from 'react'
 import Grid from '../../helpers/grid.helper'
 import Button from 'react-bootstrap/Button'
-import Table from 'react-bootstrap/Table'
 import Image from 'react-bootstrap/Image'
 import RouterOutline from '../../helpers/router.helper'
-import { applicationDescriptions } from '../../helpers/app-descriptor.helper'
 import ProfileProvider from '../../providers/profile.provider'
-import { handleW2WAPIResponse } from '../../helpers/form.helper'
-import RouterMap from '../../helpers/routes-map.helper'
-import { LinkContainer } from 'react-router-bootstrap'
 import { EmptyProps, Profile } from '../../types'
 import '../../styles/dashboard.sass'
+import { LinkContainer } from 'react-router-bootstrap'
+
+import Marketplace from '../../assets/img/brands/marketplace.webp'
+import Logistica from '../../assets/img/brands/logistica.webp'
 
 type Operation = unknown & {
   open: boolean
@@ -46,163 +44,50 @@ export default class Dashboard extends Component<EmptyProps, DashboardState> {
     }
   }
 
-  private async getProfile(): Promise<void> {
-    const response = await ProfileProvider.getUserProfile()
-    if (!response) return
-    if (handleW2WAPIResponse(response)) {
-      this.setState({
-        ...this.state,
-        profile: response.value,
-        profileProgress: 100
-      })
-    }
-  }
-
-  private redirectTo(link: string): void {
-    window.location.href = link
-  }
-
-  private getActiveApps(): JSX.Element {
-    return <Grid.Row className="mx-auto">
-      {
-        applicationDescriptions.map((app, index) => {
-          return <Grid.Col
-            className="dash-app-link"
-            xs="12"
-            lg="6"
-            key={ index }
-            onClick={ (event: MouseEvent<HTMLDivElement>) => { if (event.isTrusted) this.redirectTo(app.references[0].link) } } >
-            <Image
-              className="img-fluid d-block w-auto"
-              src={ app.icon.svg ?? app.icon.svg }
-              alt={ app.icon.alt } />
-          </Grid.Col>
-        })
-      }
-    </Grid.Row>
-  }
-
-  public componentDidMount(): void {
-    CommonFunctions.updatePathTitle('Dashboard')
-    this.getProfile()
-  }
-
   public render(): JSX.Element {
+    const service = [
+      {
+        tittle: 'Marketplace',
+        path: '/',
+        tittle2: 'GrillaMarket',
+        pa2th: '/',
+        descripcion: 'es un sitio donde los productos son ofrecidos por los comerciantes para ser adquiridos por consumidores, es decir, un mercado en el mundo online. En él, varios comerciantes colocan sus productos a la venta en un sólo canal.',
+        image: Marketplace
+      },
+      {
+        tittle: 'Logistica',
+        path: '/quotation',
+        tittle2: 'Grilla',
+        pa2th: '/quotation/grid',
+        descripcion: 'Contrata servicios de envíos, utiliza muestra logística de logística de punta a punta',
+        image: Logistica
+      },
+    ]
+  
     return RouterOutline.set(
-      <Grid.Container>
-        <Grid.Row>
-          <Grid.Col xs="12" lg className="col-card">
-            <h2 className="font-weight-bold">
-              Organization Profile
-              <LinkContainer to={ RouterMap.profile.path } >
-                <Button
-                  variant="info"
-                  className="d-inline-block d-lg-flex float-lg-right my-3 my-lg-0 mx-auto mx-lg-0" >
-                  Check
-                </Button>
+      <Grid.Container className='justify-content-center bb-5'>
+        <h1 className='Tittle pt-4' style={{ textAlign: 'center'}}>Nuestros Modulos</h1>
+        <h4 className='subTittle' style={{ textAlign: 'center'}}> Explora a través de tus servicios habilitados. </h4>
+        <hr className='solid mt-4'></hr>
+        {service.map((item, index) => (
+          <Grid.Row className='pb-5' key={index}>
+            <Grid.Col xs='12' md='6' lg='4'>
+              <Image style={{ width:'22rem', height:'11rem' }} src={item.image} />
+            </Grid.Col>
+            <Grid.Col xs='12' md='6' lg='8'>
+              <h2>{item.tittle}</h2>
+              <p>{item.descripcion}</p>
+              <LinkContainer to={item.path}>
+                <Button variant='warning' style={{ marginLeft:'6rem' }}>Ir a {item.tittle}</Button>
               </LinkContainer>
-            </h2>
-            {
-              this.state.profileProgress < 100
-                ? <small className="float-lg-right d-block d-lg-flex">
-                  { this.state.profileProgress }% complete
-                </small>
-                : null
-            }
-            <br />
-            <Table
-              className="mb-3"
-              size="sm"
-              striped
-              borderless
-              responsive >
-              <tbody>
-                <tr>
-                  <td>Name</td>
-                  <td>{ this.state.profile.organization.name }</td>
-                </tr>
-                <tr>
-                  <td>Identifification</td>
-                  <td>
-                    {
-                      this.state.profile.organization.identification.type
-                        ? this.state.profile.organization.identification.type + ': ' + this.state.profile.organization.identification.number
-                        : ' '
-                    }
-                  </td>
-                </tr>
-                <tr>
-                  <td>Social Reason</td>
-                  <td>{ this.state.profile.organization.socialReason }</td>
-                </tr>
-              </tbody>
-            </Table>
-          </Grid.Col>
-          <Grid.Col xs="12" lg="auto" />
-          <Grid.Col xs="12" lg className="col-card">
-            <h2 className="font-weight-bold">Apps</h2>
-            <p>Your active W2W apps</p>
-            { this.getActiveApps() }
-          </Grid.Col>
-        </Grid.Row>
-        <Grid.Row className="py-3" />
-        <Grid.Row>
-          <Grid.Col className="col-card">
-            <h2 className="font-weight-bold">
-              Current / Open Operations
-              <Button
-                disabled
-                variant="warning"
-                className="d-inline-block d-lg-flex float-lg-right my-3 my-lg-0 mx-auto mx-lg-0" >
-                Create Operation
-              </Button>
-            </h2>
-            <br />
-            {
-              this.state.operations.length > 0
-                ? <Table responsive borderless striped>
-                  <tbody>
-                    {
-                      this.state.operations.map((op, index) => {
-                        op.open
-                          ? <tr key={ index }>
-                            <th scope="row">{ index }</th>
-                            <td>{ op.open }</td>
-                          </tr>
-                          : null
-                      })
-                    }
-                  </tbody>
-                </Table>
-                : <h5 className="text-center">No opened operations yet</h5>
-            }
-          </Grid.Col>
-        </Grid.Row>
-        <Grid.Row className="py-3" />
-        <Grid.Row>
-          <Grid.Col className="col-card">
-            <h2 className="font-weight-bold">Billing / Invoicing History</h2>
-            <br />
-            {
-              this.state.invoices.length > 0
-                ? <Table responsive borderless striped>
-                  <tbody>
-                    {
-                      this.state.invoices.map((op, index) => {
-                        op.open
-                          ? <tr key={ index }>
-                            <th scope="row">{ index }</th>
-                            <td>{ op.open }</td>
-                          </tr>
-                          : null
-                      })
-                    }
-                  </tbody>
-                </Table>
-                : <h5 className="text-center">No billing data available</h5>
-            }
-          </Grid.Col>
-        </Grid.Row>
+              <LinkContainer to={item.pa2th} >
+                <Button variant='warning' className='ml-2' style={{ marginLeft:'6rem' }}>Ir a {item.tittle2}</Button>
+              </LinkContainer>
+            </Grid.Col>
+            <hr className='solid mt-4'></hr>
+          </Grid.Row>
+        ))
+        }
       </Grid.Container>,
       'non-empty'
     )

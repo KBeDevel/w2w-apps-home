@@ -11,8 +11,7 @@ import RoutesMap from '../../helpers/routes-map.helper'
 import AccountProvider from '../../providers/account.provider'
 import { RouteAnalyzerHelper } from '../../helpers/route-analyzer.helper'
 
-import W2WLogo from '../../assets/img/w2w-logo.png'
-import WTCLogo from '../../assets/img/wtcfl-logo-white.png'
+import W2WLogo from '../../assets/svg/brands/luminant-logo-w.svg'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
 import '../../styles/navbar.sass'
@@ -40,12 +39,8 @@ export default class MainNavbar extends Component {
 
   private baseLinks(): JSX.Element {
     return <>
-      <LinkContainer to={ RoutesMap.services.path }>
-        <Nav.Link>Services</Nav.Link>
-      </LinkContainer>
-      <LinkContainer to={ RoutesMap.contact.path }>
-        <Nav.Link>Contact</Nav.Link>
-      </LinkContainer>
+      <Nav.Link>Services</Nav.Link>
+      <Nav.Link>Contact</Nav.Link>
     </>
   }
 
@@ -57,17 +52,17 @@ export default class MainNavbar extends Component {
             <Navbar.Brand>
               <Image
                 src={ W2WLogo }
-                height="100"
+                height="60"
                 alt="We To World" />
               <span className="d-none d-lg-inline-block mx-lg-4">|</span>
               <Image
                 className="d-none d-lg-inline-block"
-                src={ WTCLogo }
-                height="30"
-                alt="World Trade Center - Fort Lauderdale" />
-              <span className="mx-3 mx-lg-4">|</span>
+                // src={ WTCLogo }
+                height="10"
+                alt="" />
+              <span className="mx-3 mx-lg-4"></span>
               <span>
-                <b>Apps</b>
+                <b>Session</b>
               </span>
             </Navbar.Brand>
           </LinkContainer>
@@ -89,7 +84,7 @@ export default class MainNavbar extends Component {
                         <NavDropdown.Item>Profile</NavDropdown.Item>
                       </LinkContainer>
                       <NavDropdown.Divider />
-                      <NavDropdown.Item onClick={ (event) => { this.closeSession(event) } } >Logout</NavDropdown.Item>
+                      <NavDropdown.Item onClick={ (event) => { this.closeSession(event) } } >Cerrar sesion</NavDropdown.Item>
                     </NavDropdown>
                   </>
                   : <>
@@ -103,12 +98,12 @@ export default class MainNavbar extends Component {
                           ? <>
                             <LinkContainer to={ RoutesMap.signIn.path }>
                               <Button variant="outline-light" size="sm" className="mx-2 ml-lg-2 mr-lg-0 btn-block">
-                                <b>Sign In</b>
+                                <b>Iniciar</b>
                               </Button>
                             </LinkContainer>
                             <LinkContainer to={ RoutesMap.signUp.path }>
                               <Button variant="warning" size="sm" className="mx-2 mr-lg-0 btn-block">
-                                <b>Create Free Account</b>
+                                <b>Crea tu cuenta gratis</b>
                               </Button>
                             </LinkContainer>
                           </>
@@ -121,14 +116,12 @@ export default class MainNavbar extends Component {
                           ? <>
                             <LinkContainer to={ RoutesMap.signIn.path }>
                               <Button variant="outline-light" size="sm" className="mx-2 ml-lg-2 mr-lg-0">
-                                <b>Sign In</b>
+                                <b>Iniciar</b>
                               </Button>
                             </LinkContainer>
-                            <LinkContainer to={ RoutesMap.signUp.path }>
-                              <Button variant="warning" size="sm" className="mx-2 mr-lg-0">
-                                <b>Create Free Account</b>
-                              </Button>
-                            </LinkContainer>
+                            <Button variant="warning" size="sm" className="mx-2 mr-lg-0">
+                              <b>Registro</b>
+                            </Button>
                           </>
                           : <></>
                       }

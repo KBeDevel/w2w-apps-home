@@ -10,14 +10,14 @@ a
   z-index: 1
   height: 40rem
   overflow: hidden
-  background: url(../assets/img/warehouse-boxes.jpg)
+  background: url(../assets/img/brands/home1.jpg)
   background-repeat: no-repeat
   background-size: cover
   background-position: center
   +overlay(rgba($black, 0), 100%)
   &::before
     z-index: 3
-    background-image: linear-gradient(to bottom, rgba($black,0), rgba($black,0), rgba($black,0), rgba($black,0), rgba($light,.4), rgba($light,.7), rgba($light,.9), rgba($light,1)) !important
+    background-image: linear-gradient(to bottom, rgba($black,0), rgba($black,0), rgba($black,0), rgba($black,0), rgba($light,.2), rgba($light,.6), rgba($light,.9), rgba($light,1)) !important
     @media screen and (max-width: $breakpoint-lg)
       display: none
   &::after
